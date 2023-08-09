@@ -17,6 +17,7 @@
     "require-dev": {
         "api-platform/core": "^2.7",
         "behat/behat": "^3.12",
+        "doctrine/orm": "~2.15.1",
         "lexik/jwt-authentication-bundle": "^2.16",
         "matthiasnoback/symfony-config-test": "^4.3",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",

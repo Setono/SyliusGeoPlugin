@@ -1,0 +1,10 @@
+setono_sylius_geo:
+    form:
+        rule:
+            name: Name
+            name_placeholder: Use this as a reference for your reference
+    ui:
+        geo: Geo
+        rules: Rules
+        manage_rules: Manage your geo related rules
+        new_rule: New rule

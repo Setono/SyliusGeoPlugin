@@ -8,8 +8,12 @@ namespace Setono\SyliusGeoPlugin\Model;
 // 1. Add bool to match bots
 // 2. Add bool to redirect to frontpage if a URL cannot be produced
 // 3. Add list of excluded IPs
+use Sylius\Component\Resource\Model\ToggleableTrait;
+
 class Rule implements RuleInterface
 {
+    use ToggleableTrait;
+
     protected ?int $id = null;
 
     protected ?string $name = null;

@@ -1,1 +1,14 @@
-# TODO Add your admin routes here
+setono_sylius_geo_admin_rule:
+    resource: |
+        section: admin
+        alias: setono_sylius_geo.rule
+        permission: true
+        templates: "@SyliusAdmin\\Crud"
+        redirect: update
+        grid: setono_sylius_geo_admin_rule
+        vars:
+            all:
+                subheader: setono_sylius_geo.ui.manage_rules
+            index:
+                icon: 'google'
+    type: sylius.resource

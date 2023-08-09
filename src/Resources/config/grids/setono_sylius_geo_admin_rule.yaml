@@ -1,0 +1,20 @@
+sylius_grid:
+    grids:
+        setono_sylius_geo_admin_rule:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: "%setono_sylius_geo.model.rule.class%"
+            fields:
+                name:
+                    type: string
+                    label: sylius.ui.name
+            actions:
+                main:
+                    create:
+                        type: create
+                item:
+                    update:
+                        type: update
+                    delete:
+                        type: delete

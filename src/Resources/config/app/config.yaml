@@ -1,0 +1,2 @@
+imports:
+    - "@SetonoSyliusGeoPlugin/Resources/config/grids/setono_sylius_geo_admin_rule.yaml"

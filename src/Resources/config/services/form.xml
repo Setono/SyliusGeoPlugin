@@ -8,6 +8,7 @@
     </parameters>
     <services>
         <service id="setono_sylius_geo.form.rule" class="Setono\SyliusGeoPlugin\Form\Type\RuleType">
+            <argument type="service" id="sylius.repository.country"/>
             <argument>%setono_sylius_geo.model.rule.class%</argument>
             <argument>%setono_sylius_geo.form.rule.validation_groups%</argument>
 

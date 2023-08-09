@@ -1,10 +1,17 @@
 setono_sylius_geo:
     form:
         rule:
+            source_channel: Source channel (the channel the visitor lands on)
+            target_channel: Target channel (the channel the visitor should be redirected to)
+            country_codes: Country codes
+            excluded_ips: Excluded IPs
+            excluded_ips_placeholder: A list of IPs (separated by newline) to exclude from this rule
+            exclude_bots: Exclude bots from this rule
             name: Name
             name_placeholder: Use this as a reference for your reference
     ui:
         geo: Geo
         rules: Rules
+        edit_rule: Edit rule
         manage_rules: Manage your geo related rules
         new_rule: New rule

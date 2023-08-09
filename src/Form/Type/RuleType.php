@@ -75,9 +75,7 @@ final class RuleType extends AbstractResourceType
             ->get('excludedIps')
             ->addModelTransformer(new CallbackTransformer(
                 /** @psalm-suppress MixedArgumentTypeCoercion */
-                function (array $excludedIps): string {
-                    return implode("\n", $excludedIps);
-                },
+                fn (array $excludedIps): string => implode("\n", $excludedIps),
                 function (?string $excludedIps): array {
                     if (null === $excludedIps || '' === $excludedIps) {
                         return [];

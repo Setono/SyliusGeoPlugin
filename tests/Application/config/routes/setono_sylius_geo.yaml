@@ -1,0 +1,2 @@
+setono_sylius_geo:
+    resource: "@SetonoSyliusGeoPlugin/Resources/config/routes.yaml"

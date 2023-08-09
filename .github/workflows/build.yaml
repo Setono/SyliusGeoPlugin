@@ -40,8 +40,8 @@ jobs:
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
                     
-            -   name: "Remove require-dev section in composer.json"
-                run: "composer config --unset require-dev"
+            -   name: "Remove sylius/sylius from composer.json"
+                run: "composer remove --dev sylius/sylius --no-update --no-install"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"

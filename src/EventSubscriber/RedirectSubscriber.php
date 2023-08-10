@@ -6,6 +6,7 @@ namespace Setono\SyliusGeoPlugin\EventSubscriber;
 
 
 use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
+use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Setono\SyliusGeoPlugin\Provider\CountryCodeProviderInterface;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
 use Setono\SyliusGeoPlugin\UrlGenerator\UrlGeneratorInterface;
@@ -62,13 +63,15 @@ final class RedirectSubscriber implements EventSubscriberInterface
 
         foreach ($rules as $rule) {
             if($this->ruleEligibilityChecker->isEligible($rule)) {
-                $url = $this->urlGenerator->generate($rule, $request);
-
-                if (null !== $url) {
-                    $event->setResponse(new RedirectResponse($url));
-                    $event->stopPropagation();
-                    break;
+                try {
+                    $url = $this->urlGenerator->generate($rule, $request);
+                } catch (UrlGenerationException $e) {
+                    continue;
                 }
+
+                $event->setResponse(new RedirectResponse($url));
+                $event->stopPropagation();
+                break;
             }
         }
     }

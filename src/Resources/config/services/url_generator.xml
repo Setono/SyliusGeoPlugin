@@ -8,6 +8,7 @@
 
         <service id="setono_sylius_geo.url_generator.fallback"
                  class="Setono\SyliusGeoPlugin\UrlGenerator\FallbackUrlGenerator">
+            <argument type="service" id="router"/>
         </service>
     </services>
 </container>

@@ -65,6 +65,11 @@ class Rule implements RuleInterface
         $this->excludedIps = $excludedIps;
     }
 
+    public function hasExcludedIps(): bool
+    {
+        return [] !== $this->excludedIps;
+    }
+
     public function getSourceChannel(): ?ChannelInterface
     {
         return $this->sourceChannel;

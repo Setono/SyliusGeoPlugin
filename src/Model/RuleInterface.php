@@ -30,6 +30,8 @@ interface RuleInterface extends ResourceInterface, ToggleableInterface
      */
     public function setExcludedIps(array $excludedIps): void;
 
+    public function hasExcludedIps(): bool;
+
     public function getSourceChannel(): ?ChannelInterface;
 
     public function setSourceChannel(?ChannelInterface $sourceChannel): void;

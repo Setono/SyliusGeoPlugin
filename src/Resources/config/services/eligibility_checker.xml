@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <service id="Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface"
+                 alias="setono_sylius_geo.eligibility_checker.rule.composite"/>
+
+        <service id="setono_sylius_geo.eligibility_checker.rule.composite"
+                 class="Setono\SyliusGeoPlugin\EligibilityChecker\CompositeRuleEligibilityChecker">
+        </service>
+
+        <service id="setono_sylius_geo.eligibility_checker.rule.bot"
+                 class="Setono\SyliusGeoPlugin\EligibilityChecker\BotRuleEligibilityChecker">
+            <argument type="service" id="setono_bot_detection.bot_detector.default"/>
+
+            <tag name="setono_sylius_geo.rule_eligibility_checker"/>
+        </service>
+
+        <service id="setono_sylius_geo.eligibility_checker.rule.ip"
+                 class="Setono\SyliusGeoPlugin\EligibilityChecker\IpRuleEligibilityChecker">
+            <argument type="service" id="request_stack"/>
+
+            <tag name="setono_sylius_geo.rule_eligibility_checker"/>
+        </service>
+
+        <service id="setono_sylius_geo.eligibility_checker.rule.country_code"
+                 class="Setono\SyliusGeoPlugin\EligibilityChecker\CountryCodeRuleEligibilityChecker">
+            <argument type="service" id="setono_sylius_geo.provider.country_code.composite"/>
+
+            <tag name="setono_sylius_geo.rule_eligibility_checker"/>
+        </service>
+    </services>
+</container>

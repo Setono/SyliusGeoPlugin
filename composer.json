@@ -9,6 +9,8 @@
     ],
     "require": {
         "php": ">=7.4",
+        "setono/bot-detection-bundle": "^1.11",
+        "setono/composite-compiler-pass": "^1.1",
         "sylius/core-bundle": "^1.0",
         "symfony/config": "^5.4 || ^6.0",
         "symfony/dependency-injection": "^5.4 || ^6.0",

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Setono\SyliusGeoPlugin\EventSubscriber;
 
 
+use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
+use Setono\SyliusGeoPlugin\Provider\CountryCodeProviderInterface;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
 use Setono\SyliusGeoPlugin\UrlGenerator\UrlGeneratorInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -19,15 +21,18 @@ final class RedirectSubscriber implements EventSubscriberInterface
     private ChannelContextInterface $channelContext;
     private RuleRepositoryInterface $ruleRepository;
     private UrlGeneratorInterface $urlGenerator;
+    private RuleEligibilityCheckerInterface $ruleEligibilityChecker;
 
     public function __construct(
         ChannelContextInterface $channelContext,
         RuleRepositoryInterface $ruleRepository,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        RuleEligibilityCheckerInterface $ruleEligibilityChecker
     ) {
         $this->channelContext = $channelContext;
         $this->ruleRepository = $ruleRepository;
         $this->urlGenerator = $urlGenerator;
+        $this->ruleEligibilityChecker = $ruleEligibilityChecker;
     }
 
     public static function getSubscribedEvents(): array
@@ -55,15 +60,16 @@ final class RedirectSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        // todo run rule eligibility checker for each rule
+        foreach ($rules as $rule) {
+            if($this->ruleEligibilityChecker->isEligible($rule)) {
+                $url = $this->urlGenerator->generate($rule, $request);
 
-        $rule = $rules[0];
-
-        $url = $this->urlGenerator->generate($rule, $request);
-        if(null === $url) {
-            return;
+                if (null !== $url) {
+                    $event->setResponse(new RedirectResponse($url));
+                    $event->stopPropagation();
+                    break;
+                }
+            }
         }
-
-        $event->setResponse(new RedirectResponse($url));
     }
 }

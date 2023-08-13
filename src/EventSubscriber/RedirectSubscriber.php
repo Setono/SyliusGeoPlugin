@@ -1,13 +1,11 @@
 <?php
-declare(strict_types=1);
 
+declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\EventSubscriber;
 
-
 use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
-use Setono\SyliusGeoPlugin\Provider\CountryCodeProviderInterface;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
 use Setono\SyliusGeoPlugin\UrlGenerator\UrlGeneratorInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
@@ -20,8 +18,11 @@ use Symfony\Component\HttpKernel\KernelEvents;
 final class RedirectSubscriber implements EventSubscriberInterface
 {
     private ChannelContextInterface $channelContext;
+
     private RuleRepositoryInterface $ruleRepository;
+
     private UrlGeneratorInterface $urlGenerator;
+
     private RuleEligibilityCheckerInterface $ruleEligibilityChecker;
 
     public function __construct(
@@ -62,7 +63,7 @@ final class RedirectSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
 
         foreach ($rules as $rule) {
-            if($this->ruleEligibilityChecker->isEligible($rule)) {
+            if ($this->ruleEligibilityChecker->isEligible($rule)) {
                 try {
                     $url = $this->urlGenerator->generate($rule, $request);
                 } catch (UrlGenerationException $e) {
@@ -71,6 +72,7 @@ final class RedirectSubscriber implements EventSubscriberInterface
 
                 $event->setResponse(new RedirectResponse($url));
                 $event->stopPropagation();
+
                 break;
             }
         }

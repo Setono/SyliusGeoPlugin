@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\EligibilityChecker;
@@ -17,7 +18,7 @@ final class BotRuleEligibilityChecker implements RuleEligibilityCheckerInterface
 
     public function isEligible(RuleInterface $rule): bool
     {
-        if(!$rule->isExcludeBots()) {
+        if (!$rule->isExcludeBots()) {
             return true;
         }
 

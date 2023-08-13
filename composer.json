@@ -9,12 +9,23 @@
     ],
     "require": {
         "php": ">=7.4",
+        "knplabs/knp-menu": "^3.3",
         "setono/bot-detection-bundle": "^1.11",
         "setono/composite-compiler-pass": "^1.1",
+        "sylius/channel": "^1.0",
+        "sylius/channel-bundle": "^1.0",
         "sylius/core-bundle": "^1.0",
+        "sylius/grid-bundle": "^1.10",
+        "sylius/resource-bundle": "^1.8",
+        "sylius/ui-bundle": "^1.0",
         "symfony/config": "^5.4 || ^6.0",
         "symfony/dependency-injection": "^5.4 || ^6.0",
-        "symfony/http-kernel": "^5.4 || ^6.0"
+        "symfony/event-dispatcher": "^5.4 || ^6.0",
+        "symfony/form": "^5.4 || ^6.0",
+        "symfony/http-foundation": "^5.4 || ^6.0",
+        "symfony/http-kernel": "^5.4 || ^6.0",
+        "symfony/routing": "^5.4 || ^6.0",
+        "webmozart/assert": "^1.11"
     },
     "require-dev": {
         "api-platform/core": "^2.7",
@@ -23,17 +34,18 @@
         "lexik/jwt-authentication-bundle": "^2.16",
         "matthiasnoback/symfony-config-test": "^4.3",
         "matthiasnoback/symfony-dependency-injection-test": "^4.3",
+        "php-http/message-factory": "^1.1",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.18",
         "setono/code-quality-pack": "^2.4",
-        "sylius/sylius": "~1.12.3",
+        "sylius/sylius": "~1.10.14",
         "symfony/debug-bundle": "^5.4 || ^6.0",
         "symfony/dotenv": "^5.4 || ^6.0",
         "symfony/intl": "^5.4 || ^6.0",
         "symfony/property-info": "^5.4 || ^6.0",
         "symfony/serializer": "^5.4 || ^6.0",
         "symfony/web-profiler-bundle": "^5.4 || ^6.0",
-        "symfony/webpack-encore-bundle": "^1.16"
+        "symfony/webpack-encore-bundle": "^1.17"
     },
     "prefer-stable": true,
     "autoload": {
@@ -53,6 +65,7 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": false,
             "ergebnis/composer-normalize": true,
+            "ocramius/package-versions": true,
             "symfony/thanks": false
         },
         "sort-packages": true

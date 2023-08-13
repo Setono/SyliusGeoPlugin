@@ -1,9 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-
 namespace Setono\SyliusGeoPlugin\Provider;
-
 
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +21,7 @@ final class QueryBasedCountryCodeProvider implements CountryCodeProviderInterfac
     public function getCountryCode(): ?string
     {
         $request = $this->requestStack->getMainRequest();
-        if(null === $request) {
+        if (null === $request) {
             return null;
         }
 

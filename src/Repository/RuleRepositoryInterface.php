@@ -7,7 +7,6 @@ namespace Setono\SyliusGeoPlugin\Repository;
 use Setono\SyliusGeoPlugin\Model\RuleInterface;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @extends RepositoryInterface<RuleInterface>

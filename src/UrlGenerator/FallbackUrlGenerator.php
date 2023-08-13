@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\UrlGenerator;
@@ -19,15 +20,15 @@ final class FallbackUrlGenerator implements UrlGeneratorInterface
 
     public function generate(RuleInterface $rule, Request $request): string
     {
-        /** @var mixed $routeParameters */
+        /** @var mixed $route */
         $route = $request->attributes->get('_route');
-        if(!is_string($route) || '' === $route) {
+        if (!is_string($route) || '' === $route) {
             throw UrlGenerationException::invalidRoute();
         }
 
         /** @var mixed $routeParameters */
         $routeParameters = $request->attributes->get('_route_params');
-        if(!is_array($routeParameters)) {
+        if (!is_array($routeParameters)) {
             $routeParameters = [];
         }
 
@@ -38,12 +39,12 @@ final class FallbackUrlGenerator implements UrlGeneratorInterface
         }
 
         $targetChannel = $rule->getTargetChannel();
-        if(null === $targetChannel) {
+        if (null === $targetChannel) {
             throw new UrlGenerationException('The target channel on the rule was null');
         }
 
         $hostname = $targetChannel->getHostname();
-        if(null === $hostname) {
+        if (null === $hostname) {
             throw new UrlGenerationException('The hostname on the target channel was null');
         }
 

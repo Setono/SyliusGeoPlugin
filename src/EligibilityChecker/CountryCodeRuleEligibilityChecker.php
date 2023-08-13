@@ -1,9 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\EligibilityChecker;
 
-use Setono\BotDetectionBundle\BotDetector\BotDetectorInterface;
 use Setono\SyliusGeoPlugin\Model\RuleInterface;
 use Setono\SyliusGeoPlugin\Provider\CountryCodeProviderInterface;
 
@@ -19,7 +19,7 @@ final class CountryCodeRuleEligibilityChecker implements RuleEligibilityCheckerI
     public function isEligible(RuleInterface $rule): bool
     {
         $countryCode = $this->countryCodeProvider->getCountryCode();
-        if(null === $countryCode) {
+        if (null === $countryCode) {
             return false;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\EligibilityChecker;
@@ -14,7 +15,7 @@ final class CompositeRuleEligibilityChecker extends CompositeService implements 
     public function isEligible(RuleInterface $rule): bool
     {
         foreach ($this->services as $service) {
-            if(!$service->isEligible($rule)) {
+            if (!$service->isEligible($rule)) {
                 return false;
             }
         }

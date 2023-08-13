@@ -27,8 +27,6 @@ final class SetonoSyliusGeoPlugin extends AbstractResourceBundle
             'setono_sylius_geo.eligibility_checker.rule.composite',
             'setono_sylius_geo.rule_eligibility_checker'
         ));
-
-
     }
 
     public function getSupportedDrivers(): array

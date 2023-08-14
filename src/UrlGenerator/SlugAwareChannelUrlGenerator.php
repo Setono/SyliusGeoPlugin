@@ -18,11 +18,11 @@ final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         RequestStack $requestStack,
-        RepositoryInterface $taxonTranslationRepository
+        RepositoryInterface $repository
     ) {
         parent::__construct($urlGenerator, $requestStack);
 
-        $this->repository = $taxonTranslationRepository;
+        $this->repository = $repository;
     }
 
     public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string

@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
+    private const SESSION_KEY = 'setono_sylius_geo__eligibility_checked';
+
     private LoggerInterface $logger;
 
     private ChannelContextInterface $channelContext;
@@ -56,6 +58,11 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
             return;
         }
 
+        $request = $event->getRequest();
+        if ($request->getSession()->has(self::SESSION_KEY)) {
+            return;
+        }
+
         try {
             $rules = $this->ruleRepository->findEnabledBySourceChannel($this->channelContext->getChannel());
         } catch (ChannelNotFoundException $e) {
@@ -74,7 +81,7 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
 
             if ($this->ruleEligibilityChecker->isEligible($rule)) {
                 try {
-                    $url = $this->urlGenerator->generate($targetChannel, $rule->getTargetLocale(), $event->getRequest());
+                    $url = $this->urlGenerator->generate($targetChannel, $rule->getTargetLocale(), $request);
                 } catch (UrlGenerationException $e) {
                     $this->logger->error(sprintf(
                         'A visitor matched the rule %s, but the URL generation threw an exception: %s',
@@ -91,6 +98,8 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
                 break;
             }
         }
+
+        $request->getSession()->set(self::SESSION_KEY, true);
     }
 
     public function setLogger(LoggerInterface $logger): void

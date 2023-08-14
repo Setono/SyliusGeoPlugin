@@ -9,6 +9,10 @@
             <argument type="service" id="setono_sylius_geo.url_generator.channel.composite"/>
             <argument type="service" id="setono_sylius_geo.eligibility_checker.rule.composite"/>
 
+            <call method="setLogger">
+                <argument type="service" id="logger"/>
+            </call>
+
             <tag name="kernel.event_subscriber"/>
         </service>
     </services>

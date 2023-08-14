@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\EventSubscriber;
 
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
@@ -15,8 +18,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final class RedirectSubscriber implements EventSubscriberInterface
+final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
+    private LoggerInterface $logger;
+
     private ChannelContextInterface $channelContext;
 
     private RuleRepositoryInterface $ruleRepository;
@@ -31,6 +36,7 @@ final class RedirectSubscriber implements EventSubscriberInterface
         ChannelUrlGeneratorInterface $urlGenerator,
         RuleEligibilityCheckerInterface $ruleEligibilityChecker
     ) {
+        $this->logger = new NullLogger();
         $this->channelContext = $channelContext;
         $this->ruleRepository = $ruleRepository;
         $this->urlGenerator = $urlGenerator;
@@ -70,6 +76,12 @@ final class RedirectSubscriber implements EventSubscriberInterface
                 try {
                     $url = $this->urlGenerator->generate($targetChannel, $rule->getTargetLocale(), $event->getRequest());
                 } catch (UrlGenerationException $e) {
+                    $this->logger->error(sprintf(
+                        'A visitor matched the rule %s, but the URL generation threw an exception: %s',
+                        (string) $rule->getName(),
+                        $e->getMessage()
+                    ));
+
                     continue;
                 }
 
@@ -79,5 +91,10 @@ final class RedirectSubscriber implements EventSubscriberInterface
                 break;
             }
         }
+    }
+
+    public function setLogger(LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
     }
 }

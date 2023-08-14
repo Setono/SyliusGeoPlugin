@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\DependencyInjection;
 
+use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
+use Setono\SyliusGeoPlugin\Provider\CountryCodeProviderInterface;
+use Setono\SyliusGeoPlugin\UrlGenerator\ChannelUrlGeneratorInterface;
 use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
 use Symfony\Component\Config\FileLocator;
@@ -30,5 +33,14 @@ final class SetonoSyliusGeoExtension extends AbstractResourceExtension
             $config['resources'],
             $container,
         );
+
+        $container->registerForAutoconfiguration(ChannelUrlGeneratorInterface::class)
+            ->addTag('setono_sylius_geo.channel_url_generator');
+
+        $container->registerForAutoconfiguration(CountryCodeProviderInterface::class)
+            ->addTag('setono_sylius_geo.country_code_provider');
+
+        $container->registerForAutoconfiguration(RuleEligibilityCheckerInterface::class)
+            ->addTag('setono_sylius_geo.rule_eligibility_checker');
     }
 }

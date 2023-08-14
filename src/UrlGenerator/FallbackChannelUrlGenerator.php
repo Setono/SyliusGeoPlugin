@@ -14,6 +14,7 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
     {
         $route = $this->assertRoute($request);
         $routeParameters = $this->assertRouteParameters($request);
+        $routeParameters['_locale'] = $this->getNewLocale($channel, $locale);
 
         try {
             $url = $this->urlGenerator->generate($route, $routeParameters);
@@ -21,12 +22,7 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
             throw new UrlGenerationException(sprintf('An error occurred trying to generate the URL "%s": %s', $route, $e->getMessage()), 0, $e);
         }
 
-        $hostname = $channel->getHostname();
-        if (null === $hostname) {
-            throw new UrlGenerationException('The hostname on the target channel was null');
-        }
-
-        return sprintf('https://%s%s', $hostname, $url);
+        return $this->getChannelUrl($channel, $url);
     }
 
     public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool

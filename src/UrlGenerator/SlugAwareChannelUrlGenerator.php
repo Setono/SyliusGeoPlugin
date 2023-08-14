@@ -34,13 +34,11 @@ final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
         $routeParameters = $this->assertRouteParameters($request);
         $currentSlug = $this->assertRouteParameter($routeParameters, 'slug');
 
-        $newSlug = $this->getNewSlug($this->repository, $currentSlug, $request->getLocale(), $newLocale);
+        $routeParameters['slug'] = $this->getNewSlug($this->repository, $currentSlug, $request->getLocale(), $newLocale);
+        $routeParameters['_locale'] = $newLocale;
 
         try {
-            $path = $this->urlGenerator->generate($route, [
-                'slug' => $newSlug,
-                'locale' => $newLocale,
-            ]);
+            $path = $this->urlGenerator->generate($route, $routeParameters);
         } catch (\Throwable $e) {
             throw new UrlGenerationException(sprintf(
                 'An error occurred trying to generate the URL: %s',

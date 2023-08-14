@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\UrlGenerator;
 
-use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,16 +36,7 @@ final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
         $routeParameters['slug'] = $this->getNewSlug($this->repository, $currentSlug, $request->getLocale(), $newLocale);
         $routeParameters['_locale'] = $newLocale;
 
-        try {
-            $path = $this->urlGenerator->generate($route, $routeParameters);
-        } catch (\Throwable $e) {
-            throw new UrlGenerationException(sprintf(
-                'An error occurred trying to generate the URL: %s',
-                $e->getMessage()
-            ), 0, $e);
-        }
-
-        return $this->getChannelUrl($channel, $path);
+        return $this->generateChannelUrl($channel, $route, $routeParameters);
     }
 
     public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool

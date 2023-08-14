@@ -101,8 +101,18 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         }
     }
 
-    protected function getChannelUrl(BaseChannelInterface $channel, string $path): string
+    protected function generateChannelUrl(BaseChannelInterface $channel, string $route, array $routeParameters): string
     {
+        try {
+            $path = $this->urlGenerator->generate($route, $routeParameters);
+        } catch (\Throwable $e) {
+            throw new UrlGenerationException(sprintf(
+                'An error occurred trying to generate the URL "%s": %s',
+                $route,
+                $e->getMessage()
+            ), 0, $e);
+        }
+
         $hostname = $channel->getHostname();
         if (null === $hostname) {
             throw new UrlGenerationException(sprintf('The hostname on the channel "%s" was null', (string) $channel->getCode()));

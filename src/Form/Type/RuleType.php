@@ -81,6 +81,7 @@ final class RuleType extends AbstractResourceType
             ])
             ->add('targetLocale', LocaleChoiceType::class, [
                 'label' => 'setono_sylius_geo.form.rule.target_locale',
+                'required' => false,
             ])
         ;
 

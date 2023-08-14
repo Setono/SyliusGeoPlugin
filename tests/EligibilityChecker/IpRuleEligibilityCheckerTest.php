@@ -44,6 +44,7 @@ final class IpRuleEligibilityCheckerTest extends TestCase
     public function it_is_eligible_if_the_request_stack_is_empty(): void
     {
         $rule = new Rule();
+        $rule->setExcludedIps(['123.456.789.123']);
 
         $checker = new IpRuleEligibilityChecker(new RequestStack());
         self::assertTrue($checker->isEligible($rule));
@@ -55,6 +56,7 @@ final class IpRuleEligibilityCheckerTest extends TestCase
     public function it_is_eligible_if_the_ip_is_null(): void
     {
         $rule = new Rule();
+        $rule->setExcludedIps(['123.456.789.123']);
 
         $checker = new IpRuleEligibilityChecker(self::getRequestStack(null));
         self::assertTrue($checker->isEligible($rule));

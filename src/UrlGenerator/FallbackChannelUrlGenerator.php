@@ -19,7 +19,11 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
         try {
             $url = $this->urlGenerator->generate($route, $routeParameters);
         } catch (\Throwable $e) {
-            throw new UrlGenerationException(sprintf('An error occurred trying to generate the URL "%s": %s', $route, $e->getMessage()), 0, $e);
+            throw new UrlGenerationException(sprintf(
+                'An error occurred trying to generate the URL "%s": %s',
+                $route,
+                $e->getMessage()
+            ), 0, $e);
         }
 
         return $this->getChannelUrl($channel, $url);

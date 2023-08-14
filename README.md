@@ -63,7 +63,17 @@ is implement the [CountryCodeProviderInterface](src/Provider/CountryCodeProvider
 automatically tagged as `setono_sylius_geo.country_code_provider`.
 
 **NOTE:** If you are using Cloudflare all you have to do is within your dashboard go to
-`Rules > Transform Rules > Managed Transforms` and enable the `Add visitor location headers`. 
+`Rules > Transform Rules > Managed Transforms` and enable the `Add visitor location headers`.
+
+## Usage
+
+Go to https://your-store.com/admin/geo/rules/new to create a new rule. Here is an example:
+
+![Rule example](docs/images/rule.jpg)
+
+As you can see our goal is to redirect Danish visitors to our locale Danish store. We have excluded bots and our
+office IP so that bots can freely crawl our international store, and we are able to browse the international store
+without being redirected, although we are based in Denmark.
 
 [ico-version]: https://poser.pugx.org/setono/sylius-geo-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-geo-plugin/license

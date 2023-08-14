@@ -1,0 +1,5 @@
+{% if data|length > 2 %}
+    {{ data|slice(0, 2)|join(', ') }}, ...
+{% else %}
+    {{ data|join(', ') }}
+{% endif %}

@@ -13,8 +13,14 @@ setono_sylius_geo:
             target_channel: "... redirect the visitor to this channel:"
             target_locale: "... with this locale (notice if this locale is not set, the default locale on the channel will be used):"
     ui:
+        country_codes: Country codes
         edit_rule: Edit rule
+        exclude_bots: Exclude bots
+        excluded_ips: Excluded IPs
         geo: Geo
         manage_rules: Manage your geo related rules
         new_rule: New rule
         rules: Rules
+        source_channel: Source channel
+        target_channel: Target channel
+        target_locale: Target locale

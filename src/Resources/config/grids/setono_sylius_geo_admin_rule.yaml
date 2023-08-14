@@ -9,6 +9,42 @@ sylius_grid:
                 name:
                     type: string
                     label: sylius.ui.name
+                excludeBots:
+                    type: twig
+                    label: setono_sylius_geo.ui.exclude_bots
+                    options:
+                        template: "@SyliusUi/Grid/Field/yesNo.html.twig"
+                excludedIps:
+                    type: twig
+                    label: setono_sylius_geo.ui.excluded_ips
+                    options:
+                        template: "@SetonoSyliusGeoPlugin/admin/rule/grid/field/excluded_ips.html.twig"
+                enabled:
+                    type: twig
+                    label: sylius.ui.enabled
+                    options:
+                        template: "@SyliusUi/Grid/Field/enabled.html.twig"
+                sourceChannel:
+                    type: twig
+                    label: setono_sylius_geo.ui.source_channel
+                    options:
+                        template: "@SyliusAdmin/Order/Grid/Field/channel.html.twig"
+                countryCodes:
+                    type: twig
+                    label: setono_sylius_geo.ui.country_codes
+                    options:
+                        template: "@SetonoSyliusGeoPlugin/admin/rule/grid/field/country_codes.html.twig"
+                targetChannel:
+                    type: twig
+                    label: setono_sylius_geo.ui.target_channel
+                    options:
+                        template: "@SyliusAdmin/Order/Grid/Field/channel.html.twig"
+                targetLocale:
+                    type: twig
+                    path: .
+                    label: setono_sylius_geo.ui.target_locale
+                    options:
+                        template: "@SetonoSyliusGeoPlugin/admin/rule/grid/field/target_locale.html.twig"
             actions:
                 main:
                     create:

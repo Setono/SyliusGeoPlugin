@@ -1,0 +1,6 @@
+{# @var data \Setono\SyliusGeoPlugin\Model\RuleInterface #}
+{% if data.targetLocale %}
+    {{ data.targetLocale }}
+{% else %}
+    {{ data.targetChannel.defaultLocale.code }}
+{% endif %}

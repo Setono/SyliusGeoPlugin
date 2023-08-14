@@ -20,7 +20,11 @@ final class RegisterChannelUrlGeneratorsPass implements CompilerPassInterface
             return;
         }
 
-        /** @var array<string, array{classes: array{model: string}}> $resources */
+        /**
+         * @psalm-suppress UndefinedDocblockClass
+         *
+         * @var array<string, array{classes: array{model: string}}> $resources
+         */
         $resources = $container->getParameter('sylius.resources');
 
         foreach ($resources as $resourceAlias => $resource) {

@@ -27,14 +27,14 @@ final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
     public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
     {
         $request = $this->getRequest($request);
-        $newLocale = $this->getNewLocale($channel, $locale);
+        $targetLocale = $this->getTargetLocale($channel, $locale);
 
         $route = $this->assertRoute($request);
         $routeParameters = $this->assertRouteParameters($request);
         $currentSlug = $this->assertRouteParameter($routeParameters, 'slug');
 
-        $routeParameters['slug'] = $this->getNewSlug($this->repository, $currentSlug, $request->getLocale(), $newLocale);
-        $routeParameters['_locale'] = $newLocale;
+        $routeParameters['slug'] = $this->getTargetSlug($this->repository, $currentSlug, $request->getLocale(), $targetLocale);
+        $routeParameters['_locale'] = $targetLocale;
 
         return $this->generateChannelUrl($channel, $route, $routeParameters);
     }

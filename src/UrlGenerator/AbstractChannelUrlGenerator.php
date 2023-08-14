@@ -31,6 +31,11 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         $this->requestStack = $requestStack;
     }
 
+    /**
+     * @param Request|null $request if the $request is null, the method will try to get the request from the request stack
+     *
+     * @throws UrlGenerationException if the request stack does not have a main request
+     */
     protected function getRequest(Request $request = null): Request
     {
         if (null !== $request) {
@@ -45,7 +50,12 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         return $request;
     }
 
-    protected function getNewLocale(BaseChannelInterface $channel, string $locale = null): string
+    /**
+     * @param string|null $locale if null, the method will try to get the locale from the given $channel
+     *
+     * @throws UrlGenerationException if it's not possible to retrieve a locale from the given $channel
+     */
+    protected function getTargetLocale(BaseChannelInterface $channel, string $locale = null): string
     {
         if (null !== $locale) {
             return $locale;
@@ -69,7 +79,7 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
     }
 
     // todo should we make this method better?
-    protected function getNewSlug(RepositoryInterface $repository, string $currentSlug, string $currentLocale, string $newLocale): string
+    protected function getTargetSlug(RepositoryInterface $repository, string $currentSlug, string $currentLocale, string $newLocale): string
     {
         try {
             /** @var TranslationInterface|null $currentTranslated */
@@ -101,6 +111,11 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         }
     }
 
+    /**
+     * Will generate a URL on the given $channel with the given $route and $routeParameters
+     *
+     * @throws UrlGenerationException if it's not possible to generate a URL or the hostname on the given $channel is null
+     */
     protected function generateChannelUrl(BaseChannelInterface $channel, string $route, array $routeParameters): string
     {
         try {

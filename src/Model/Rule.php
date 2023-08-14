@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Setono\SyliusGeoPlugin\Model;
 
-// todo
-// - What to do if a URL for the target channel cannot be produced? Redirect to frontpage? Stay on page?
-// - Keep query string?
 use Sylius\Component\Channel\Model\ChannelInterface;
 use Sylius\Component\Resource\Model\ToggleableTrait;
 

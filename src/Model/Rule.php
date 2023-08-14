@@ -61,7 +61,7 @@ class Rule implements RuleInterface
 
     public function setExcludedIps(array $excludedIps): void
     {
-        $this->excludedIps = $excludedIps;
+        $this->excludedIps = array_values(array_unique($excludedIps));
     }
 
     public function hasExcludedIps(): bool
@@ -86,7 +86,7 @@ class Rule implements RuleInterface
 
     public function setCountryCodes(array $countryCodes): void
     {
-        $this->countryCodes = $countryCodes;
+        $this->countryCodes = array_values(array_unique($countryCodes));
     }
 
     public function getTargetChannel(): ?ChannelInterface

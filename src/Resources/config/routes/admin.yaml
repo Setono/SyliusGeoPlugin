@@ -9,6 +9,8 @@ setono_sylius_geo_admin_rule:
         vars:
             all:
                 subheader: setono_sylius_geo.ui.manage_rules
+                templates:
+                    form: "@SetonoSyliusGeoPlugin/admin/rule/_form.html.twig"
             index:
                 icon: 'google'
     type: sylius.resource

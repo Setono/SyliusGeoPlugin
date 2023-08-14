@@ -1,0 +1,27 @@
+<div class="ui two column stackable grid">
+    <div class="column">
+        {{ form_errors(form) }}
+        <div class="ui segment">
+            {{ form_row(form.name) }}
+            {{ form_row(form.enabled) }}
+
+            {{ form_row(form.excludeBots) }}
+            <div class="ui info message">
+                {{ 'setono_sylius_geo.form.rule.exclude_bots_help'|trans }}
+            </div>
+
+            {{ form_row(form.excludedIps) }}
+            <div class="ui info message">
+                {{ 'setono_sylius_geo.form.rule.excluded_ips_help'|trans }}
+            </div>
+        </div>
+    </div>
+    <div class="column">
+        <div class="ui segment">
+            {{ form_row(form.sourceChannel) }}
+            {{ form_row(form.countryCodes) }}
+            {{ form_row(form.targetChannel) }}
+            {{ form_row(form.targetLocale) }}
+        </div>
+    </div>
+</div>

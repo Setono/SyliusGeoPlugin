@@ -1,15 +1,17 @@
 setono_sylius_geo:
     form:
         rule:
-            country_codes: Country codes
+            country_codes: "... and his/her IP is from one of these countries:"
             exclude_bots: Exclude bots from this rule
+            exclude_bots_help: It is recommended to exclude bots from rule because bots can have IPs from allover the world, but you want the bot to be able to crawl all your channels
             excluded_ips: Excluded IPs
+            excluded_ips_help: Use the excluded IPs to exclude your office IP. This will have the effect that you can still visit all your stores without being redirected
             excluded_ips_placeholder: A list of IPs (separated by newline) to exclude from this rule
             name: Name
-            name_placeholder: Use this as a reference for your reference
-            source_channel: Source channel (the channel the visitor lands on)
-            target_channel: Target channel (the channel the visitor should be redirected to)
-            target_locale: Target locale (if the target locale is not set, the default locale on the target channel will be used)
+            name_placeholder: Redirect visitors from Germany to example.de...
+            source_channel: If the visitor lands on
+            target_channel: "... redirect the visitor to this channel:"
+            target_locale: "... with this locale (notice if this locale is not set, the default locale on the channel will be used):"
     ui:
         edit_rule: Edit rule
         geo: Geo

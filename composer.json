@@ -10,6 +10,7 @@
     "require": {
         "php": ">=7.4",
         "knplabs/knp-menu": "^3.3",
+        "psr/log": "^1.1 || ^2.0 || ^3.0",
         "setono/bot-detection-bundle": "^1.11",
         "setono/composite-compiler-pass": "^1.1",
         "sylius/channel": "^1.0",

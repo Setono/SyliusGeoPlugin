@@ -68,19 +68,20 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         return $locale;
     }
 
+    // todo should we make this method better?
     protected function getNewSlug(RepositoryInterface $repository, string $currentSlug, string $currentLocale, string $newLocale): string
     {
         try {
-            /** @var TranslationInterface|null $oldTranslated */
-            $oldTranslated = $repository->findOneBy([
+            /** @var TranslationInterface|null $currentTranslated */
+            $currentTranslated = $repository->findOneBy([
                 'locale' => $currentLocale,
                 'slug' => $currentSlug,
             ]);
-            Assert::isInstanceOf($oldTranslated, TranslationInterface::class);
+            Assert::isInstanceOf($currentTranslated, TranslationInterface::class);
 
             /** @var SlugAwareInterface|null $newTranslated */
             $newTranslated = $repository->findOneBy([
-                'translatable' => $oldTranslated->getTranslatable(),
+                'translatable' => $currentTranslated->getTranslatable(),
                 'locale' => $newLocale,
             ]);
             Assert::isInstanceOf($newTranslated, SlugAwareInterface::class);
@@ -90,8 +91,24 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
 
             return $slug;
         } catch (\Throwable $e) {
-            throw new UrlGenerationException('An error occurred when trying to find a slug'); // todo better exception message
+            throw new UrlGenerationException(sprintf(
+                'An error occurred when trying to get a new slug from the following arguments: Current slug: %s, current locale: %s, new locale: %s. The error was: %s',
+                $currentSlug,
+                $currentLocale,
+                $newLocale,
+                $e->getMessage()
+            ), 0, $e);
         }
+    }
+
+    protected function getChannelUrl(BaseChannelInterface $channel, string $path): string
+    {
+        $hostname = $channel->getHostname();
+        if (null === $hostname) {
+            throw new UrlGenerationException(sprintf('The hostname on the channel "%s" was null', (string) $channel->getCode()));
+        }
+
+        return sprintf('https://%s%s', $hostname, $path);
     }
 
     protected function assertRoute(Request $request = null): string

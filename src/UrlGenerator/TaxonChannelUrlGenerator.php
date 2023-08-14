@@ -11,20 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class ProductChannelUrlGenerator extends AbstractChannelUrlGenerator
+final class TaxonChannelUrlGenerator extends AbstractChannelUrlGenerator
 {
-    private const ROUTE = 'sylius_shop_product_show';
+    private const ROUTE = 'sylius_shop_product_index';
 
-    private RepositoryInterface $productTranslationRepository;
+    private RepositoryInterface $taxonTranslationRepository;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         RequestStack $requestStack,
-        RepositoryInterface $productTranslationRepository
+        RepositoryInterface $taxonTranslationRepository
     ) {
         parent::__construct($urlGenerator, $requestStack);
 
-        $this->productTranslationRepository = $productTranslationRepository;
+        $this->taxonTranslationRepository = $taxonTranslationRepository;
     }
 
     public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
@@ -35,7 +35,7 @@ final class ProductChannelUrlGenerator extends AbstractChannelUrlGenerator
         $routeParameters = $this->assertRouteParameters($request);
         $currentSlug = $this->assertRouteParameter($routeParameters, 'slug');
 
-        $newSlug = $this->getNewSlug($this->productTranslationRepository, $currentSlug, $request->getLocale(), $newLocale);
+        $newSlug = $this->getNewSlug($this->taxonTranslationRepository, $currentSlug, $request->getLocale(), $newLocale);
 
         try {
             $path = $this->urlGenerator->generate(self::ROUTE, [

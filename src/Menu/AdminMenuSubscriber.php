@@ -33,7 +33,7 @@ final class AdminMenuSubscriber implements EventSubscriberInterface
     private function addChild(ItemInterface $item): void
     {
         $item
-            ->addChild('geo', [
+            ->addChild('setono_sylius_geo', [
                 'route' => 'setono_sylius_geo_admin_rule_index',
             ])
             ->setLabel('setono_sylius_geo.ui.geo')

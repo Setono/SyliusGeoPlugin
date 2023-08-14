@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Setono\SyliusGeoPlugin;
 
 use Setono\CompositeCompilerPass\CompositeCompilerPass;
+use Setono\SyliusGeoPlugin\DependencyInjection\Compiler\RegisterChannelUrlGeneratorsPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Sylius\Bundle\ResourceBundle\AbstractResourceBundle;
 use Sylius\Bundle\ResourceBundle\SyliusResourceBundle;
@@ -17,6 +18,8 @@ final class SetonoSyliusGeoPlugin extends AbstractResourceBundle
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
+
+        $container->addCompilerPass(new RegisterChannelUrlGeneratorsPass());
 
         $container->addCompilerPass(new CompositeCompilerPass(
             'setono_sylius_geo.provider.country_code.composite',

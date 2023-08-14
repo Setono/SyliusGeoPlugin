@@ -11,20 +11,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class ProductChannelUrlGenerator extends AbstractChannelUrlGenerator
+final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
 {
-    private const ROUTE = 'sylius_shop_product_show';
-
-    private RepositoryInterface $productTranslationRepository;
+    private RepositoryInterface $repository;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         RequestStack $requestStack,
-        RepositoryInterface $productTranslationRepository
+        RepositoryInterface $taxonTranslationRepository
     ) {
         parent::__construct($urlGenerator, $requestStack);
 
-        $this->productTranslationRepository = $productTranslationRepository;
+        $this->repository = $taxonTranslationRepository;
     }
 
     public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
@@ -32,13 +30,14 @@ final class ProductChannelUrlGenerator extends AbstractChannelUrlGenerator
         $request = $this->getRequest($request);
         $newLocale = $this->getNewLocale($channel, $locale);
 
+        $route = $this->assertRoute($request);
         $routeParameters = $this->assertRouteParameters($request);
         $currentSlug = $this->assertRouteParameter($routeParameters, 'slug');
 
-        $newSlug = $this->getNewSlug($this->productTranslationRepository, $currentSlug, $request->getLocale(), $newLocale);
+        $newSlug = $this->getNewSlug($this->repository, $currentSlug, $request->getLocale(), $newLocale);
 
         try {
-            $path = $this->urlGenerator->generate(self::ROUTE, [
+            $path = $this->urlGenerator->generate($route, [
                 'slug' => $newSlug,
                 'locale' => $newLocale,
             ]);
@@ -54,6 +53,9 @@ final class ProductChannelUrlGenerator extends AbstractChannelUrlGenerator
 
     public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool
     {
-        return $this->getRequest($request)->attributes->get(self::ATTRIBUTE_ROUTE) === self::ROUTE;
+        /** @var mixed $routeParameters */
+        $routeParameters = $this->getRequest($request)->attributes->get(self::ATTRIBUTE_ROUTE_PARAMETERS);
+
+        return is_array($routeParameters) && isset($routeParameters['slug']);
     }
 }

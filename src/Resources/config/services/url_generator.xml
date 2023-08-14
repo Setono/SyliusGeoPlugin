@@ -16,14 +16,5 @@
 
             <tag name="setono_sylius_geo.channel_url_generator" priority="-100"/>
         </service>
-
-        <service id="setono_sylius_geo.url_generator.channel.product"
-                 class="Setono\SyliusGeoPlugin\UrlGenerator\ProductChannelUrlGenerator">
-            <argument type="service" id="router"/>
-            <argument type="service" id="request_stack"/>
-            <argument type="service" id="sylius.repository.product_translation"/>
-
-            <tag name="setono_sylius_geo.channel_url_generator" priority="-50"/>
-        </service>
     </services>
 </container>

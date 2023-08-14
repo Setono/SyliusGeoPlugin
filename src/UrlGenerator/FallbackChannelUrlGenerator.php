@@ -33,6 +33,6 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
     {
         $request = $this->getRequest($request);
 
-        return $request->attributes->has('_route') && $request->attributes->has('_route_params');
+        return $request->attributes->has(self::ATTRIBUTE_ROUTE) && $request->attributes->has(self::ATTRIBUTE_ROUTE_PARAMETERS);
     }
 }

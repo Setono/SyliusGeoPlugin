@@ -55,6 +55,16 @@ php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 ```
 
+### Step 6: Use an existing country code provider or create a new one
+
+The plugin uses [country code providers](src/Provider) to provide the country code. The plugin comes with a single
+country code provider which is based on request headers. If you want to create your own provider, all you have to do
+is implement the [CountryCodeProviderInterface](src/Provider/CountryCodeProviderInterface.php). The service will be
+automatically tagged as `setono_sylius_geo.country_code_provider`.
+
+**NOTE:** If you are using Cloudflare all you have to do is within your dashboard go to
+`Rules > Transform Rules > Managed Transforms` and enable the `Add visitor location headers`. 
+
 [ico-version]: https://poser.pugx.org/setono/sylius-geo-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-geo-plugin/license
 [ico-github-actions]: https://github.com/Setono/SyliusGeoPlugin/workflows/build/badge.svg

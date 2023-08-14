@@ -49,4 +49,8 @@ interface RuleInterface extends ResourceInterface, ToggleableInterface
     public function getTargetChannel(): ?ChannelInterface;
 
     public function setTargetChannel(?ChannelInterface $targetChannel): void;
+
+    public function getTargetLocale(): ?string;
+
+    public function setTargetLocale(?string $targetLocale): void;
 }

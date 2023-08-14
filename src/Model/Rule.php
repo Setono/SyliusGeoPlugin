@@ -30,6 +30,8 @@ class Rule implements RuleInterface
 
     protected ?ChannelInterface $targetChannel = null;
 
+    protected ?string $targetLocale = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,5 +100,15 @@ class Rule implements RuleInterface
     public function setTargetChannel(?ChannelInterface $targetChannel): void
     {
         $this->targetChannel = $targetChannel;
+    }
+
+    public function getTargetLocale(): ?string
+    {
+        return $this->targetLocale;
+    }
+
+    public function setTargetLocale(?string $targetLocale): void
+    {
+        $this->targetLocale = $targetLocale;
     }
 }

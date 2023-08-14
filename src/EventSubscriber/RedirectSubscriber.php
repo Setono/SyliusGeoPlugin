@@ -68,7 +68,7 @@ final class RedirectSubscriber implements EventSubscriberInterface
 
             if ($this->ruleEligibilityChecker->isEligible($rule)) {
                 try {
-                    $url = $this->urlGenerator->generate($targetChannel);
+                    $url = $this->urlGenerator->generate($targetChannel, $rule->getTargetLocale(), $event->getRequest());
                 } catch (UrlGenerationException $e) {
                     continue;
                 }

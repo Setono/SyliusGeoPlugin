@@ -12,7 +12,7 @@ final class HeaderBasedCountryCodeProvider implements CountryCodeProviderInterfa
 
     private string $headerName;
 
-    public function __construct(RequestStack $requestStack, string $headerName = 'X-Country')
+    public function __construct(RequestStack $requestStack, string $headerName)
     {
         $this->requestStack = $requestStack;
         $this->headerName = $headerName;

@@ -25,7 +25,7 @@ final class HeaderBasedCountryCodeProviderTest extends TestCase
         $requestStack = new RequestStack();
         $requestStack->push($request);
 
-        $provider = new HeaderBasedCountryCodeProvider($requestStack);
+        $provider = new HeaderBasedCountryCodeProvider($requestStack, 'X-Country');
         self::assertSame('DK', $provider->getCountryCode());
     }
 }

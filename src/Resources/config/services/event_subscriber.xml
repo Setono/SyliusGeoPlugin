@@ -6,7 +6,7 @@
                  class="Setono\SyliusGeoPlugin\EventSubscriber\RedirectSubscriber">
             <argument type="service" id="sylius.context.channel"/>
             <argument type="service" id="setono_sylius_geo.repository.rule"/>
-            <argument type="service" id="setono_sylius_geo.url_generator.default"/>
+            <argument type="service" id="setono_sylius_geo.url_generator.channel.composite"/>
             <argument type="service" id="setono_sylius_geo.eligibility_checker.rule.composite"/>
 
             <tag name="kernel.event_subscriber"/>

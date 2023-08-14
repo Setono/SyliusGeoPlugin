@@ -7,7 +7,7 @@ namespace Setono\SyliusGeoPlugin\EventSubscriber;
 use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
-use Setono\SyliusGeoPlugin\UrlGenerator\UrlGeneratorInterface;
+use Setono\SyliusGeoPlugin\UrlGenerator\ChannelUrlGeneratorInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -21,14 +21,14 @@ final class RedirectSubscriber implements EventSubscriberInterface
 
     private RuleRepositoryInterface $ruleRepository;
 
-    private UrlGeneratorInterface $urlGenerator;
+    private ChannelUrlGeneratorInterface $urlGenerator;
 
     private RuleEligibilityCheckerInterface $ruleEligibilityChecker;
 
     public function __construct(
         ChannelContextInterface $channelContext,
         RuleRepositoryInterface $ruleRepository,
-        UrlGeneratorInterface $urlGenerator,
+        ChannelUrlGeneratorInterface $urlGenerator,
         RuleEligibilityCheckerInterface $ruleEligibilityChecker
     ) {
         $this->channelContext = $channelContext;
@@ -60,12 +60,15 @@ final class RedirectSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $request = $event->getRequest();
-
         foreach ($rules as $rule) {
+            $targetChannel = $rule->getTargetChannel();
+            if (null === $targetChannel) {
+                continue;
+            }
+
             if ($this->ruleEligibilityChecker->isEligible($rule)) {
                 try {
-                    $url = $this->urlGenerator->generate($rule, $request);
+                    $url = $this->urlGenerator->generate($targetChannel);
                 } catch (UrlGenerationException $e) {
                     continue;
                 }

@@ -1,37 +1,59 @@
-# Setono SyliusGeoPlugin
+# Sylius Geo Plugin
 
 [![Latest Version][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
 [![Build Status][ico-github-actions]][link-github-actions]
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 
-[Setono](https://setono.com) have made a bunch of [plugins for Sylius](https://github.com/Setono), and we have some guidelines
-which we try to follow when developing plugins. These guidelines are used in this repository, and it gives you a very
-solid base when developing plugins.
+This plugin allows an administrator to create rules based on the visitors country and redirect the visitor to a more
+appropriate channel if applicable. An example could be that you have an international store called example.com and a few
+locale stores, e.g. example.de, example.co.uk etc. If a user is from Germany, but lands on the international version
+this plugin gives you the tools to redirect the visitor to the locale store. It will even try to redirect the visitor
+to the correct product/taxon/whatever.
 
-Enjoy! 
+## Installation
 
-## Quickstart
+### Step 1: Download the plugin
 
-1. Run `composer create-project --prefer-source --no-install --remove-vcs setono/sylius-geo-plugin:dev-master ProjectName` or just click the `Use this template` button at the right corner of this repository.
-2. Run `cd ProjectName && composer install`
-3. From the plugin skeleton root directory, run the following commands:
+```bash
+composer require setono/sylius-geo-plugin
+```
 
-    ```bash
-    php init
-    (cd tests/Application && yarn install)
-    (cd tests/Application && yarn build)
-    (cd tests/Application && bin/console assets:install)
-    
-    (cd tests/Application && bin/console doctrine:database:create)
-    (cd tests/Application && bin/console doctrine:schema:create)
-   
-    (cd tests/Application && bin/console sylius:fixtures:load -n)
-    ```
-   
-3. Start your local PHP server: `symfony serve` (see https://symfony.com/doc/current/setup/symfony_server.html for docs)
+### Step 2: Enable the plugin
 
-To be able to setup a plugin's database, remember to configure you database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+Then, enable the plugin by adding it to the list of registered plugins/bundles
+in `config/bundles.php` file of your project before (!) `SyliusGridBundle`:
+
+```php
+<?php
+$bundles = [
+    Setono\SyliusGeoPlugin\SetonoSyliusGeoPlugin::class => ['all' => true],
+    Sylius\Bundle\GridBundle\SyliusGridBundle::class => ['all' => true],
+];
+```
+
+### Step 3: Configure plugin
+
+```yaml
+# config/packages/setono_sylius_geo.yaml
+imports:
+    - { resource: "@SetonoSyliusGeoPlugin/Resources/config/app/config.yaml" }
+```
+
+### Step 4: Import routing
+
+```yaml
+# config/routes/setono_sylius_geo.yaml
+setono_sylius_geo:
+    resource: "@SetonoSyliusGeoPlugin/Resources/config/routes.yaml"
+```
+
+### Step 5: Update your database schema
+
+```bash
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+```
 
 [ico-version]: https://poser.pugx.org/setono/sylius-geo-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-geo-plugin/license

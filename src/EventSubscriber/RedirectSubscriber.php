@@ -14,13 +14,14 @@ use Setono\SyliusGeoPlugin\UrlGenerator\ChannelUrlGeneratorInterface;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
-    private const SESSION_KEY = 'setono_sylius_geo__eligibility_checked';
+    private const COOKIE_NAME = 'ssg_checked';
 
     private LoggerInterface $logger;
 
@@ -59,7 +60,7 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
         }
 
         $request = $event->getRequest();
-        if ($request->getSession()->has(self::SESSION_KEY)) {
+        if ($request->cookies->has(self::COOKIE_NAME)) {
             return;
         }
 
@@ -92,18 +93,24 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
                     continue;
                 }
 
-                $event->setResponse(new RedirectResponse($url));
+                $event->setResponse(self::createResponse($url));
                 $event->stopPropagation();
 
                 break;
             }
         }
-
-        $request->getSession()->set(self::SESSION_KEY, true);
     }
 
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
+    }
+
+    private static function createResponse(string $url): RedirectResponse
+    {
+        $response = new RedirectResponse($url);
+        $response->headers->setCookie(Cookie::create(self::COOKIE_NAME, '1', new \DateTimeImmutable('+30 days')));
+
+        return $response;
     }
 }

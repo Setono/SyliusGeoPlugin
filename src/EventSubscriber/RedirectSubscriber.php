@@ -22,8 +22,6 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareInterface
 {
-    private bool $setCookie = true;
-
     private const COOKIE_NAME = 'ssg_checked';
 
     private LoggerInterface $logger;
@@ -64,15 +62,13 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
         }
 
         $request = $event->getRequest();
-        if ($request->cookies->has(self::COOKIE_NAME)) {
-            return;
-        }
+//        if ($request->cookies->has(self::COOKIE_NAME)) {
+//            return;
+//        }
 
         try {
             $rules = $this->ruleRepository->findEnabledBySourceChannel($this->channelContext->getChannel());
         } catch (ChannelNotFoundException $e) {
-            $this->setCookie = false;
-
             return;
         }
 
@@ -108,7 +104,7 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
 
     public function setCookie(ResponseEvent $event): void
     {
-        if (!$this->setCookie || !$event->isMainRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 

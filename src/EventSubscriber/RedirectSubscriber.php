@@ -17,6 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareInterface
@@ -49,7 +50,8 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => 'redirect',
+            KernelEvents::REQUEST => ['redirect', 30],
+            KernelEvents::RESPONSE => 'setCookie',
         ];
     }
 
@@ -93,23 +95,26 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
                     continue;
                 }
 
-                $event->setResponse(self::createResponse($url));
+                $event->setResponse(new RedirectResponse($url));
 
                 break;
             }
         }
     }
 
+    public function setCookie(ResponseEvent $event): void
+    {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
+        $event->getResponse()->headers->setCookie(
+            Cookie::create(self::COOKIE_NAME, '1', new \DateTimeImmutable('+30 days'))
+        );
+    }
+
     public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
-    }
-
-    private static function createResponse(string $url): RedirectResponse
-    {
-        $response = new RedirectResponse($url);
-        $response->headers->setCookie(Cookie::create(self::COOKIE_NAME, '1', new \DateTimeImmutable('+30 days')));
-
-        return $response;
     }
 }

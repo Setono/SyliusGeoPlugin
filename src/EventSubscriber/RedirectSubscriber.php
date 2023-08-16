@@ -94,7 +94,6 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
                 }
 
                 $event->setResponse(self::createResponse($url));
-                $event->stopPropagation();
 
                 break;
             }

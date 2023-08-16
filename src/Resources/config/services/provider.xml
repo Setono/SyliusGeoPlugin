@@ -12,7 +12,7 @@
         <service id="setono_sylius_geo.provider.header_based_country_code.cloudflare"
                  class="Setono\SyliusGeoPlugin\Provider\HeaderBasedCountryCodeProvider">
             <argument type="service" id="request_stack"/>
-            <argument>CF-IPCountry</argument>
+            <argument>cf-ipcountry</argument>
 
             <tag name="setono_sylius_geo.country_code_provider"/>
         </service>

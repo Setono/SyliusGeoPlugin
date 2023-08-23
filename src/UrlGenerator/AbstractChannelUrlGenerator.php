@@ -28,6 +28,19 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         $this->requestStack = $requestStack;
     }
 
+    protected function doGenerate(string $route, array $parameters): string
+    {
+        try {
+            return $this->urlGenerator->generate($route, $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+        } catch (\Throwable $e) {
+            throw new UrlGenerationException(
+                sprintf('An error occurrd when trying to generate a URL from route "%s": %s', $route, $e->getMessage()),
+                0,
+                $e
+            );
+        }
+    }
+
     /**
      * @param Request|null $request if the $request is null, the method will try to get the request from the request stack
      *

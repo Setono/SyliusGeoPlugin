@@ -15,7 +15,7 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
         $routeParameters = $this->ensureRouteParameters($request);
         $routeParameters['_locale'] = $this->resolveTargetLocale($channel, $locale);
 
-        return $this->urlGenerator->generate($route, $routeParameters);
+        return $this->doGenerate($route, $routeParameters);
     }
 
     public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool

@@ -32,7 +32,7 @@ final class CompositeChannelUrlGeneratorTest extends TestCase
         $urlGenerator->generate('sylius_shop_product_show', [
             'slug' => 'blue-jeans',
             '_locale' => 'en_US',
-        ])->willReturn('https://example.com/products/blue-jeans');
+        ], UrlGeneratorInterface::ABSOLUTE_URL)->willReturn('https://example.com/products/blue-jeans');
         $urlGenerator->getContext()->willReturn(new RequestContext());
         $urlGenerator->setContext(Argument::type(RequestContext::class))->shouldBeCalledTimes(2);
 

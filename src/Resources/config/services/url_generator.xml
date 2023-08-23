@@ -7,6 +7,7 @@
 
         <service id="setono_sylius_geo.url_generator.channel.composite"
                  class="Setono\SyliusGeoPlugin\UrlGenerator\CompositeChannelUrlGenerator">
+            <argument type="service" id="router"/>
         </service>
 
         <service id="setono_sylius_geo.url_generator.channel.fallback"

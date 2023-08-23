@@ -7,9 +7,6 @@ namespace Setono\SyliusGeoPlugin\UrlGenerator;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Sylius\Component\Channel\Model\ChannelInterface as BaseChannelInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
-use Sylius\Component\Resource\Model\SlugAwareInterface;
-use Sylius\Component\Resource\Model\TranslationInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -55,7 +52,7 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
      *
      * @throws UrlGenerationException if it's not possible to retrieve a locale from the given $channel
      */
-    protected function getTargetLocale(BaseChannelInterface $channel, string $locale = null): string
+    protected function resolveTargetLocale(BaseChannelInterface $channel, string $locale = null): string
     {
         if (null !== $locale) {
             return $locale;
@@ -67,76 +64,24 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
 
         $defaultLocale = $channel->getDefaultLocale();
         if (null === $defaultLocale) {
-            throw new UrlGenerationException(sprintf('The default locale on the channel "%s" is null', (string) $channel->getCode()));
+            throw new UrlGenerationException(sprintf(
+                'The default locale on the channel "%s" is null',
+                (string) $channel->getCode()
+            ));
         }
 
         $locale = $defaultLocale->getCode();
         if (null === $locale) {
-            throw new UrlGenerationException(sprintf('The locale code is null on the default locale on the channel "%s"', (string) $channel->getCode()));
+            throw new UrlGenerationException(sprintf(
+                'The locale code is null on the default locale on the channel "%s"',
+                (string) $channel->getCode()
+            ));
         }
 
         return $locale;
     }
 
-    // todo should we make this method better?
-    protected function getTargetSlug(RepositoryInterface $repository, string $currentSlug, string $currentLocale, string $newLocale): string
-    {
-        try {
-            /** @var TranslationInterface|null $currentTranslated */
-            $currentTranslated = $repository->findOneBy([
-                'locale' => $currentLocale,
-                'slug' => $currentSlug,
-            ]);
-            Assert::isInstanceOf($currentTranslated, TranslationInterface::class);
-
-            /** @var SlugAwareInterface|null $newTranslated */
-            $newTranslated = $repository->findOneBy([
-                'translatable' => $currentTranslated->getTranslatable(),
-                'locale' => $newLocale,
-            ]);
-            Assert::isInstanceOf($newTranslated, SlugAwareInterface::class);
-
-            $slug = $newTranslated->getSlug();
-            Assert::stringNotEmpty($slug);
-
-            return $slug;
-        } catch (\Throwable $e) {
-            throw new UrlGenerationException(sprintf(
-                'An error occurred when trying to get a new slug from the following arguments: Current slug: %s, current locale: %s, new locale: %s. The error was: %s',
-                $currentSlug,
-                $currentLocale,
-                $newLocale,
-                $e->getMessage()
-            ), 0, $e);
-        }
-    }
-
-    /**
-     * Will generate a URL on the given $channel with the given $route and $routeParameters
-     *
-     * @throws UrlGenerationException if it's not possible to generate a URL or the hostname on the given $channel is null
-     */
-    protected function generateChannelUrl(BaseChannelInterface $channel, string $route, array $routeParameters): string
-    {
-        try {
-            $path = $this->urlGenerator->generate($route, $routeParameters);
-        } catch (\Throwable $e) {
-            throw new UrlGenerationException(sprintf(
-                'An error occurred trying to generate the URL "%s": %s',
-                $route,
-                $e->getMessage()
-            ), 0, $e);
-        }
-
-        $hostname = $channel->getHostname();
-        if (null === $hostname) {
-            throw new UrlGenerationException(sprintf('The hostname on the channel "%s" was null', (string) $channel->getCode()));
-        }
-
-        return sprintf('https://%s%s', $hostname, $path);
-    }
-
-    protected function assertRoute(Request $request = null): string
+    protected function ensureRoute(Request $request = null): string
     {
         $request = $this->getRequest($request);
         $route = $request->attributes->get(self::ATTRIBUTE_ROUTE);
@@ -147,7 +92,7 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         return $route;
     }
 
-    protected function assertRouteParameters(Request $request = null): array
+    protected function ensureRouteParameters(Request $request = null): array
     {
         $request = $this->getRequest($request);
 
@@ -163,7 +108,7 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
     /**
      * @psalm-assert non-empty-string $routeParameters[$parameter]
      */
-    protected function assertRouteParameter(array $routeParameters, string $parameter): string
+    protected function ensureRouteParameter(array $routeParameters, string $parameter): string
     {
         if (!isset($routeParameters[$parameter]) || !is_string($routeParameters[$parameter]) || '' === $routeParameters[$parameter]) {
             throw UrlGenerationException::missingOrInvalidRouteParameters($parameter);

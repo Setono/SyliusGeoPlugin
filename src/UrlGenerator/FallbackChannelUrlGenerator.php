@@ -11,11 +11,11 @@ final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
 {
     public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
     {
-        $route = $this->assertRoute($request);
-        $routeParameters = $this->assertRouteParameters($request);
-        $routeParameters['_locale'] = $this->getTargetLocale($channel, $locale);
+        $route = $this->ensureRoute($request);
+        $routeParameters = $this->ensureRouteParameters($request);
+        $routeParameters['_locale'] = $this->resolveTargetLocale($channel, $locale);
 
-        return $this->generateChannelUrl($channel, $route, $routeParameters);
+        return $this->urlGenerator->generate($route, $routeParameters);
     }
 
     public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool

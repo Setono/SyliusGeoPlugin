@@ -5,11 +5,9 @@
 [![Build Status][ico-github-actions]][link-github-actions]
 [![Code Coverage][ico-code-coverage]][link-code-coverage]
 
-This plugin allows an administrator to create rules based on the visitors country and redirect the visitor to a more
-appropriate channel if applicable. An example could be that you have an international store called example.com and a few
-locale stores, e.g. example.de, example.co.uk etc. If a user is from Germany, but lands on the international version
-this plugin gives you the tools to redirect the visitor to the locale store. It will even try to redirect the visitor
-to the correct product/taxon/whatever.
+This plugin adds geo related functionality to your store. Right now it comes with these two features:
+- Redirect visitors based on their country
+- Output `hreflang` link tags with a Twig function to help search engines discover regional versions of your store
 
 ## Installation
 
@@ -67,6 +65,8 @@ automatically tagged as `setono_sylius_geo.country_code_provider`.
 
 ## Usage
 
+### Redirect visitors based on their country
+
 Go to https://your-store.com/admin/geo/rules/new to create a new rule. Here is an example:
 
 ![Rule example](docs/images/rule.jpg)
@@ -74,6 +74,11 @@ Go to https://your-store.com/admin/geo/rules/new to create a new rule. Here is a
 As you can see our goal is to redirect Danish visitors to our locale Danish store. We have excluded bots and our
 office IP so that bots can freely crawl our international store, and we are able to browse the international store
 without being redirected, although we are based in Denmark.
+
+### Output `hreflang` link tags
+
+Add this twig code: `{{ ssg_hreflang_tags() }}` to your `<head>` section and it will output
+`<link rel="alternate" hreflang="..." href="...">` tags.
 
 [ico-version]: https://poser.pugx.org/setono/sylius-geo-plugin/v/stable
 [ico-license]: https://poser.pugx.org/setono/sylius-geo-plugin/license

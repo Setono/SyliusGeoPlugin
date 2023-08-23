@@ -5,7 +5,6 @@
         <import resource="services/eligibility_checker.xml"/>
         <import resource="services/event_subscriber.xml"/>
         <import resource="services/form.xml"/>
-        <import resource="services/menu.xml"/>
         <import resource="services/provider.xml"/>
         <import resource="services/twig.xml"/>
         <import resource="services/url_generator.xml"/>

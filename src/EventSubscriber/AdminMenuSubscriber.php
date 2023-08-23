@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Setono\SyliusGeoPlugin\Menu;
+namespace Setono\SyliusGeoPlugin\EventSubscriber;
 
 use Knp\Menu\ItemInterface;
 use Sylius\Bundle\UiBundle\Menu\Event\MenuBuilderEvent;

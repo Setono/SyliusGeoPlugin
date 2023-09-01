@@ -7,10 +7,7 @@ namespace Setono\SyliusGeoPlugin\UrlGenerator;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Sylius\Component\Channel\Model\ChannelInterface as BaseChannelInterface;
 use Sylius\Component\Core\Model\ChannelInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Webmozart\Assert\Assert;
 
 abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterface
 {
@@ -20,12 +17,9 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
 
     protected UrlGeneratorInterface $urlGenerator;
 
-    private RequestStack $requestStack;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
+    public function __construct(UrlGeneratorInterface $urlGenerator)
     {
         $this->urlGenerator = $urlGenerator;
-        $this->requestStack = $requestStack;
     }
 
     protected function doGenerate(string $route, array $parameters): string
@@ -39,25 +33,6 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
                 $e
             );
         }
-    }
-
-    /**
-     * @param Request|null $request if the $request is null, the method will try to get the request from the request stack
-     *
-     * @throws UrlGenerationException if the request stack does not have a main request
-     */
-    protected function getRequest(Request $request = null): Request
-    {
-        if (null !== $request) {
-            return $request;
-        }
-
-        $request = $this->requestStack->getMainRequest();
-        if (null === $request) {
-            throw new UrlGenerationException('The URL generator can only be used in a request cycle');
-        }
-
-        return $request;
     }
 
     /**
@@ -92,41 +67,5 @@ abstract class AbstractChannelUrlGenerator implements ChannelUrlGeneratorInterfa
         }
 
         return $locale;
-    }
-
-    protected function ensureRoute(Request $request = null): string
-    {
-        $request = $this->getRequest($request);
-        $route = $request->attributes->get(self::ATTRIBUTE_ROUTE);
-        if (!is_string($route) || '' === $route) {
-            throw UrlGenerationException::invalidRoute();
-        }
-
-        return $route;
-    }
-
-    protected function ensureRouteParameters(Request $request = null): array
-    {
-        $request = $this->getRequest($request);
-
-        /** @var mixed $routeParameters */
-        $routeParameters = $request->attributes->get(self::ATTRIBUTE_ROUTE_PARAMETERS);
-        if (!is_array($routeParameters)) {
-            throw UrlGenerationException::invalidRouteParameters();
-        }
-
-        return $routeParameters;
-    }
-
-    /**
-     * @psalm-assert non-empty-string $routeParameters[$parameter]
-     */
-    protected function ensureRouteParameter(array $routeParameters, string $parameter): string
-    {
-        if (!isset($routeParameters[$parameter]) || !is_string($routeParameters[$parameter]) || '' === $routeParameters[$parameter]) {
-            throw UrlGenerationException::missingOrInvalidRouteParameters($parameter);
-        }
-
-        return $routeParameters[$parameter];
     }
 }

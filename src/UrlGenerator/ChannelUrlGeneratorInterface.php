@@ -17,17 +17,14 @@ use Symfony\Component\HttpFoundation\Request;
 interface ChannelUrlGeneratorInterface
 {
     /**
-     * Generates a URL to the rule's target channel
-     *
-     * @param string|null $locale if the $locale is null, the default locale from the channel will be used
-     * @param Request|null $request if the $request is null, the main request from the request stack will be used
+     * Generates a URL from the given route on the given channel
      *
      * @throws UrlGenerationException if it's not possible to generate a URL
      */
-    public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string;
+    public function generate(ChannelInterface $channel, Route $route): string;
 
     /**
      * Returns true if the url generator can generate a URL based on the given arguments
      */
-    public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool;
+    public function supports(ChannelInterface $channel, Route $route): bool;
 }

@@ -5,23 +5,19 @@ declare(strict_types=1);
 namespace Setono\SyliusGeoPlugin\UrlGenerator;
 
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 final class FallbackChannelUrlGenerator extends AbstractChannelUrlGenerator
 {
-    public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
+    public function generate(ChannelInterface $channel, Route $route): string
     {
-        $route = $this->ensureRoute($request);
-        $routeParameters = $this->ensureRouteParameters($request);
-        $routeParameters['_locale'] = $this->resolveTargetLocale($channel, $locale);
+        $routeParameters = $route->getRouteParameters();
+        $routeParameters['_locale'] = $this->resolveTargetLocale($channel, $route->getLocaleCode());
 
-        return $this->doGenerate($route, $routeParameters);
+        return $this->doGenerate($route->getRoute(), $routeParameters);
     }
 
-    public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool
+    public function supports(ChannelInterface $channel, Route $route): bool
     {
-        $request = $this->getRequest($request);
-
-        return $request->attributes->has(self::ATTRIBUTE_ROUTE) && $request->attributes->has(self::ATTRIBUTE_ROUTE_PARAMETERS);
+        return true;
     }
 }

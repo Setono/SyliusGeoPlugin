@@ -9,6 +9,7 @@ use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Setono\SyliusGeoPlugin\UrlGenerator\AbstractChannelUrlGenerator;
 use Setono\SyliusGeoPlugin\UrlGenerator\CompositeChannelUrlGenerator;
+use Setono\SyliusGeoPlugin\UrlGenerator\Route;
 use Setono\SyliusGeoPlugin\UrlGenerator\SlugAwareChannelUrlGenerator;
 use Sylius\Component\Core\Model\Channel;
 use Sylius\Component\Core\Model\Product;
@@ -69,8 +70,8 @@ final class CompositeChannelUrlGeneratorTest extends TestCase
         ])->willReturn($englishProductTranslation);
 
         $channelUrlGenerator = new CompositeChannelUrlGenerator($urlGenerator->reveal());
-        $channelUrlGenerator->add(new SlugAwareChannelUrlGenerator($urlGenerator->reveal(), $requestStack, $productRepository->reveal()));
+        $channelUrlGenerator->add(new SlugAwareChannelUrlGenerator($urlGenerator->reveal(), $requestStack, $productRepository->reveal(), 'sylius_shop_product_show'));
 
-        self::assertSame('https://example.com/products/blue-jeans', $channelUrlGenerator->generate($channel, 'en_US', $request));
+        self::assertSame('https://example.com/products/blue-jeans', $channelUrlGenerator->generate($channel, Route::fromRequest($request)->withLocaleCode('en_US')));
     }
 }

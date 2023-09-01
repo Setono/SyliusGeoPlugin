@@ -10,7 +10,9 @@ use Psr\Log\NullLogger;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Setono\SyliusGeoPlugin\Provider\ChannelProviderInterface;
 use Setono\SyliusGeoPlugin\UrlGenerator\ChannelUrlGeneratorInterface;
+use Setono\SyliusGeoPlugin\UrlGenerator\Route;
 use Sylius\Component\Locale\Context\LocaleContextInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\RuntimeExtensionInterface;
 
 final class Runtime implements RuntimeExtensionInterface, LoggerAwareInterface
@@ -23,15 +25,19 @@ final class Runtime implements RuntimeExtensionInterface, LoggerAwareInterface
 
     private ChannelProviderInterface $channelProvider;
 
+    private RequestStack $requestStack;
+
     public function __construct(
         ChannelUrlGeneratorInterface $channelUrlGenerator,
         LocaleContextInterface $localeContext,
-        ChannelProviderInterface $channelProvider
+        ChannelProviderInterface $channelProvider,
+        RequestStack $requestStack
     ) {
         $this->logger = new NullLogger();
         $this->channelUrlGenerator = $channelUrlGenerator;
         $this->localeContext = $localeContext;
         $this->channelProvider = $channelProvider;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -39,6 +45,17 @@ final class Runtime implements RuntimeExtensionInterface, LoggerAwareInterface
      */
     public function hreflangTags(): string
     {
+        $request = $this->requestStack->getMainRequest();
+        if (null === $request) {
+            return '';
+        }
+
+        try {
+            $route = Route::fromRequest($request);
+        } catch (\InvalidArgumentException $e) {
+            return '';
+        }
+
         try {
             $currentLocaleCode = $this->localeContext->getLocaleCode();
 
@@ -58,7 +75,7 @@ final class Runtime implements RuntimeExtensionInterface, LoggerAwareInterface
                         $links[] = sprintf(
                             '<link rel="alternate" hreflang="%s" href="%s">',
                             str_replace('_', '-', $localeCode),
-                            $this->channelUrlGenerator->generate($channel, $localeCode)
+                            $this->channelUrlGenerator->generate($channel, $route)
                         );
                     } catch (UrlGenerationException $e) {
                         $this->logger->error($e->getMessage());

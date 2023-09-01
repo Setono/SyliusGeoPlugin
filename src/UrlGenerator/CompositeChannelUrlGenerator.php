@@ -7,7 +7,6 @@ namespace Setono\SyliusGeoPlugin\UrlGenerator;
 use Setono\CompositeCompilerPass\CompositeService;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Sylius\Component\Channel\Model\ChannelInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -23,7 +22,7 @@ final class CompositeChannelUrlGenerator extends CompositeService implements Cha
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
+    public function generate(ChannelInterface $channel, Route $route): string
     {
         if ([] === $this->services) {
             throw new UrlGenerationException('No channel URL generators has been registered');
@@ -45,11 +44,11 @@ final class CompositeChannelUrlGenerator extends CompositeService implements Cha
         $lastException = null;
 
         foreach ($this->services as $service) {
-            if ($service->supports($channel, $locale, $request)) {
+            if ($service->supports($channel, $route)) {
                 $hasSupportingChannelUrlGenerator = true;
 
                 try {
-                    $url = $service->generate($channel, $locale, $request);
+                    $url = $service->generate($channel, $route);
                     $this->urlGenerator->setContext($oldRequestContext);
 
                     return $url;
@@ -70,10 +69,10 @@ final class CompositeChannelUrlGenerator extends CompositeService implements Cha
         throw new UrlGenerationException(sprintf('Unable to generate a URL based on the given arguments%s', null === $lastException ? '' : '. Last error was: ' . $lastException->getMessage()));
     }
 
-    public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool
+    public function supports(ChannelInterface $channel, Route $route): bool
     {
         foreach ($this->services as $service) {
-            if ($service->supports($channel, $locale, $request)) {
+            if ($service->supports($channel, $route)) {
                 return true;
             }
         }

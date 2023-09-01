@@ -11,6 +11,7 @@ use Setono\SyliusGeoPlugin\EligibilityChecker\RuleEligibilityCheckerInterface;
 use Setono\SyliusGeoPlugin\Exception\UrlGenerationException;
 use Setono\SyliusGeoPlugin\Repository\RuleRepositoryInterface;
 use Setono\SyliusGeoPlugin\UrlGenerator\ChannelUrlGeneratorInterface;
+use Setono\SyliusGeoPlugin\UrlGenerator\Route;
 use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Channel\Context\ChannelNotFoundException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -78,6 +79,12 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
             return;
         }
 
+        try {
+            $route = Route::fromRequest($request);
+        } catch (\InvalidArgumentException $e) {
+            return;
+        }
+
         $this->setCookie = true;
 
         foreach ($rules as $rule) {
@@ -88,7 +95,7 @@ final class RedirectSubscriber implements EventSubscriberInterface, LoggerAwareI
 
             if ($this->ruleEligibilityChecker->isEligible($rule)) {
                 try {
-                    $url = $this->urlGenerator->generate($targetChannel, $rule->getTargetLocale(), $request);
+                    $url = $this->urlGenerator->generate($targetChannel, $route->withLocaleCode($rule->getTargetLocale()));
                 } catch (UrlGenerationException $e) {
                     $this->logger->error(sprintf(
                         'A visitor matched the rule %s, but the URL generation threw an exception: %s',

@@ -10,10 +10,29 @@
             <argument type="service" id="router"/>
         </service>
 
+        <service id="setono_sylius_geo.url_generator.channel.product"
+                 class="Setono\SyliusGeoPlugin\UrlGenerator\SlugAwareChannelUrlGenerator">
+            <argument type="service" id="router"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sylius.repository.product"/>
+            <argument>sylius_shop_product_show</argument>
+
+            <tag name="setono_sylius_geo.channel_url_generator" priority="-50"/>
+        </service>
+
+        <service id="setono_sylius_geo.url_generator.channel.taxon"
+                 class="Setono\SyliusGeoPlugin\UrlGenerator\SlugAwareChannelUrlGenerator">
+            <argument type="service" id="router"/>
+            <argument type="service" id="request_stack"/>
+            <argument type="service" id="sylius.repository.taxon"/>
+            <argument>sylius_shop_product_index</argument>
+
+            <tag name="setono_sylius_geo.channel_url_generator" priority="-50"/>
+        </service>
+
         <service id="setono_sylius_geo.url_generator.channel.fallback"
                  class="Setono\SyliusGeoPlugin\UrlGenerator\FallbackChannelUrlGenerator">
             <argument type="service" id="router"/>
-            <argument type="service" id="request_stack"/>
 
             <tag name="setono_sylius_geo.channel_url_generator" priority="-100"/>
         </service>

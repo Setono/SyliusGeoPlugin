@@ -10,6 +10,7 @@
             <argument type="service" id="setono_sylius_geo.url_generator.channel.composite"/>
             <argument type="service" id="sylius.context.locale"/>
             <argument type="service" id="setono_sylius_geo.provider.channel"/>
+            <argument type="service" id="request_stack"/>
 
             <call method="setLogger">
                 <argument type="service" id="logger"/>

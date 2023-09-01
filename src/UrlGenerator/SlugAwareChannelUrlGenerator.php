@@ -16,39 +16,45 @@ use Webmozart\Assert\Assert;
 
 final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
 {
+    private RequestStack $requestStack;
+
     private RepositoryInterface $repository;
+
+    private string $route;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         RequestStack $requestStack,
-        RepositoryInterface $repository
+        RepositoryInterface $repository,
+        string $route
     ) {
-        parent::__construct($urlGenerator, $requestStack);
+        parent::__construct($urlGenerator);
 
+        $this->requestStack = $requestStack;
         $this->repository = $repository;
+        $this->route = $route;
     }
 
-    public function generate(ChannelInterface $channel, string $locale = null, Request $request = null): string
+    public function generate(ChannelInterface $channel, Route $route): string
     {
-        $request = $this->getRequest($request);
-        $targetLocale = $this->resolveTargetLocale($channel, $locale);
+        $request = $this->getRequest();
+        $targetLocale = $this->resolveTargetLocale($channel, $route->getLocaleCode());
 
-        $route = $this->ensureRoute($request);
-        $routeParameters = $this->ensureRouteParameters($request);
-        $currentSlug = $this->ensureRouteParameter($routeParameters, 'slug');
+        $currentSlug = $route->getRouteParameter('slug');
+        if (!is_string($currentSlug)) {
+            throw UrlGenerationException::invalidRouteParameter('slug');
+        }
 
+        $routeParameters = $route->getRouteParameters();
         $routeParameters['slug'] = $this->resolveTargetSlug($this->repository, $currentSlug, $request->getLocale(), $targetLocale);
         $routeParameters['_locale'] = $targetLocale;
 
-        return $this->doGenerate($route, $routeParameters);
+        return $this->doGenerate($route->getRoute(), $routeParameters);
     }
 
-    public function supports(ChannelInterface $channel, string $locale = null, Request $request = null): bool
+    public function supports(ChannelInterface $channel, Route $route): bool
     {
-        /** @var mixed $routeParameters */
-        $routeParameters = $this->getRequest($request)->attributes->get(self::ATTRIBUTE_ROUTE_PARAMETERS);
-
-        return is_array($routeParameters) && isset($routeParameters['slug']);
+        return $route->getRoute() === $this->route && $route->hasRouteParameter('slug');
     }
 
     // todo should we make this method better?
@@ -86,5 +92,18 @@ final class SlugAwareChannelUrlGenerator extends AbstractChannelUrlGenerator
                 $e->getMessage()
             ), 0, $e);
         }
+    }
+
+    /**
+     * @throws UrlGenerationException if the request stack does not have a main request
+     */
+    private function getRequest(): Request
+    {
+        $request = $this->requestStack->getMainRequest();
+        if (null === $request) {
+            throw new UrlGenerationException('The URL generator can only be used in a request cycle');
+        }
+
+        return $request;
     }
 }
